@@ -51,47 +51,11 @@ def transform_point(point, H):
     return np.array([xp[0, 0] / xp[2, 0], xp[1, 0] / xp[2, 0]])
 
 
-
-
-
-def apply_to_channel(X, H, channel):
-    ans = np.zeros((X.shape[0], X.shape[1]))
-    corners = [
-        transform_point((0, 0), H),
-        transform_point((X.shape[0] - 1, 0), H),
-        transform_point((X.shape[0] - 1, X.shape[1] - 1), H),
-        transform_point((0, X.shape[1] - 1), H),
-    ]
-    print(corners)
-    # offset_x = min([x[0] for x in corners])
-    # offset_y = min([x[1] for x in corners])
-
-    for y in range(X.shape[0]):
-        for x in range(X.shape[1]):
-            p = transform_point((x, y), H)
-            nx = int(round(p[0]))
-            ny = int(round(p[1]))
-            if 0 <= ny < X.shape[0] and 0 <= nx < X.shape[1]:
-                ans[y][x] = X[ny][nx][channel]
-            else:
-                ans[y][x] = 0
-    return ans
-
-
 def apply_homography(X, H, interpolate_point):
     """Returns a new image which is equal to X*H"""
     # uint8 is to guarantee integers in the interval [0, 255]
     H = np.linalg.pinv(H)
     ans = np.zeros(X.shape, np.uint8)
-    corners = [
-        transform_point((0, 0), H),
-        transform_point((X.shape[0] - 1, 0), H),
-        transform_point((X.shape[0] - 1, X.shape[1] - 1), H),
-        transform_point((0, X.shape[1] - 1), H),
-    ]
-    # print(corners)
-    # offset_x = min([x[0] for x in corners])
-    # offset_y = min([x[1] for x in corners])
 
     for y in range(X.shape[0]):
         for x in range(X.shape[1]):
@@ -110,8 +74,18 @@ def biliniear_interpolation(p, X):
     x2 = x1 + 1
     y1 = int(floor(p[1]))
     y2 = y1 + 1
-    if valid(x1, y1, X) and valid(x1, y2, X) and valid(x2, y1, X) and valid(x2, y1, X):
-        return (X[y1][x1] + X[y1][x2] + X[y2][x2] + X[y2][x1]) * 0.25
+    if valid(x1, y1, X) and valid(x1, y2, X) and valid(x2, y1, X) and valid(x2, y2, X):
+        new_pixel = np.array([0, 0, 0])
+        for c in range(0, 3):
+            left = np.array([[x2 - x, x - x1]])
+            mid = np.array([
+                [X[y1][x1][c], X[y1][x2][c]],
+                [X[y2][x1][c], X[y2][x2][c]],
+            ])
+            right = np.array([[y2 - y], [y - y1]])
+            ans = left.dot(mid).dot(right)[0, 0]
+            new_pixel[c] = ans
+        return new_pixel
     return np.array([0, 0, 0])
 
 
@@ -132,7 +106,7 @@ if __name__ == "__main__":
     img = cv2.imread(os.path.join(DIR, '../img/original.jpg'))
     print(img.shape)
     img_out_cv = cv2.warpPerspective(img, H, (img.shape[0], img.shape[1]))
-    img_out = apply_homography(img, H, round_interpolation)
+    img_out = apply_homography(img, H, biliniear_interpolation)
     cv2.imwrite(os.path.join(DIR, '../img/transformed.jpg'), img_out)
     cv2.imwrite(os.path.join(DIR, '../img/transformed_cv.jpg'), img_out_cv)
     # cv2.imshow('image', img)
