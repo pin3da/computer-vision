@@ -16,57 +16,9 @@
 %% http://www.ieee.org/
 
 
-
-% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
-% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
-% *** with production work. IEEE's font choices can trigger bugs that do  ***
-% *** not appear when using other class files.                            ***
-% The testflow support page is at:
-% http://www.michaelshell.org/tex/testflow/
-
-
-%%*************************************************************************
-%% Legal Notice:
-%% This code is offered as-is without any warranty either expressed or
-%% implied; without even the implied warranty of MERCHANTABILITY or
-%% FITNESS FOR A PARTICULAR PURPOSE!
-%% User assumes all risk.
-%% In no event shall IEEE or any contributor to this code be liable for
-%% any damages or losses, including, but not limited to, incidental,
-%% consequential, or any other damages, resulting from the use or misuse
-%% of any information contained here.
-%%
-%% All comments are the opinions of their respective authors and are not
-%% necessarily endorsed by the IEEE.
-%%
-%% This work is distributed under the LaTeX Project Public License (LPPL)
-%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
-%% distributed and modified. A copy of the LPPL, version 1.3, is included
-%% in the base LaTeX documentation of all distributions of LaTeX released
-%% 2003/12/01 or later.
-%% Retain all contribution notices and credits.
-%% ** Modified files should be clearly indicated as such, including  **
-%% ** renaming them and changing author support contact information. **
-%%
-%% File list of work: IEEEtran.cls, IEEEtran_HOWTO.pdf, bare_adv.tex,
-%%                    bare_conf.tex, bare_jrnl.tex, bare_jrnl_compsoc.tex
-%%*************************************************************************
-
-% Note that the a4paper option is mainly intended so that authors in
-% countries using A4 can easily print to A4 and see how their papers will
-% look in print - the typesetting of the document will not typically be
-% affected with changes in paper size (but the bottom and side margins will).
-% Use the testflow package mentioned above to verify correct handling of
-% both paper sizes by the user's LaTeX system.
-%
-% Also note that the "draftcls" or "draftclsnofoot", not "draft", option
-% should be used if it is desired that the figures are to be displayed in
-% draft mode.
-%
 \documentclass[journal]{IEEEtran}
 \usepackage{blindtext}
 \usepackage{graphicx}
-
 % Some very useful LaTeX packages include:
 % (uncomment the ones you want to load)
 
@@ -90,34 +42,10 @@
 % have to be run twice to clear warning/error messages.
 
 
-
-
-
-
 % *** CITATION PACKAGES ***
 %
 
 \usepackage{cite}
-
-% cite.sty was written by Donald Arseneau
-% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
-% \cite{} output to follow that of IEEE. Loading the cite package will
-% result in citation numbers being automatically sorted and properly
-% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
-% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
-% \cite will automatically add leading space, if needed. Use cite.sty's
-% noadjust option (cite.sty V3.8 and later) if you want to turn this off.
-% cite.sty is already installed on most LaTeX systems. Be sure and use
-% version 4.0 (2003-05-27) and later if using hyperref.sty. cite.sty does
-% not currently provide for hyperlinked citations.
-% The latest version can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/cite/
-% The documentation is contained in the cite.sty file itself.
-
-
-
-
-
 
 % *** GRAPHICS RELATED PACKAGES ***
 %
@@ -315,51 +243,6 @@
 % not format its papers in such ways.
 
 
-%\ifCLASSOPTIONcaptionsoff
-%  \usepackage[nomarkers]{endfloat}
-% \let\MYoriglatexcaption\caption
-% \renewcommand{\caption}[2][\relax]{\MYoriglatexcaption[#2]{#2}}
-%\fi
-% endfloat.sty was written by James Darrell McCauley and Jeff Goldberg.
-% This package may be useful when used in conjunction with IEEEtran.cls'
-% captionsoff option. Some IEEE journals/societies require that submissions
-% have lists of figures/tables at the end of the paper and that
-% figures/tables without any captions are placed on a page by themselves at
-% the end of the document. If needed, the draftcls IEEEtran class option or
-% \CLASSINPUTbaselinestretch interface can be used to increase the line
-% spacing as well. Be sure and use the nomarkers option of endfloat to
-% prevent endfloat from "marking" where the figures would have been placed
-% in the text. The two hack lines of code above are a slight modification of
-% that suggested by in the endfloat docs (section 8.3.1) to ensure that
-% the full captions always appear in the list of figures/tables - even if
-% the user used the short optional argument of \caption[]{}.
-% IEEE papers do not typically make use of \caption[]'s optional argument,
-% so this should not be an issue. A similar trick can be used to disable
-% captions of packages such as subfig.sty that lack options to turn off
-% the subcaptions:
-% For subfig.sty:
-% \let\MYorigsubfloat\subfloat
-% \renewcommand{\subfloat}[2][\relax]{\MYorigsubfloat[]{#2}}
-% For subfigure.sty:
-% \let\MYorigsubfigure\subfigure
-% \renewcommand{\subfigure}[2][\relax]{\MYorigsubfigure[]{#2}}
-% However, the above trick will not work if both optional arguments of
-% the \subfloat/subfig command are used. Furthermore, there needs to be a
-% description of each subfigure *somewhere* and endfloat does not add
-% subfigure captions to its list of figures. Thus, the best approach is to
-% avoid the use of subfigure captions (many IEEE journals avoid them anyway)
-% and instead reference/explain all the subfigures within the main caption.
-% The latest version of endfloat.sty and its documentation can obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/endfloat/
-%
-% The IEEEtran \ifCLASSOPTIONcaptionsoff conditional can also be used
-% later in the document, say, to conditionally put the References on a
-% page by themselves.
-
-
-
-
-
 % *** PDF, URL AND HYPERLINK PACKAGES ***
 %
 %\usepackage{url}
@@ -430,7 +313,7 @@
 
 
 % The paper headers
-\markboth{Computer vision class, Universidad Tecnologica de Pereira ~ 2017-I}%
+\markboth{Computer vision class, Universidad Tecnologica de Pereira ~ 2017-II}%
 {Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for Journals}
 
 
@@ -441,26 +324,49 @@
 \begin{abstract}
 %\boldmath
 In this work I applied the theory about 2D projective transformations studied
-in the computer vision class. There are three experiments to test, the first
-two expertiments remove perspective from images and the last one adds
-perspective to one image.
+in the computer vision class. The work consists of three experiments, the first
+experiment aims to remove the perspective of an image, the second one simulates
+a scanner, and the last one applies the perspective to one image in order to
+embed it into another image.
 
 \end{abstract}
-% IEEEtran.cls defaults to using nonbold math in the Abstract.
-% This preserves the distinction between vectors and scalars. However,
-% if the journal you are submitting to favors bold math in the abstract,
-% then you can use LaTeX's standard command \boldmath at the very start
-% of the abstract to achieve this. Many IEEE journals frown on math
-% in the abstract anyway.
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-Computer vision, 2d projective transformations, 2d geometry, homographies.
+Computer vision, 2d projective transformations, 2d geometry, homographies,
+perspective.
 \end{IEEEkeywords}
 
 \section{Introduction}
 
+A projective transformation is a natural deformation of the geometrical
+shapes that we see every day, for example when we take photografies of doors,
+windows and similar objects, they do not look like their original shapes
+(rectangles) but our brain automatically removes the perspective and we can
+know how the objects really look. This is a very interesting problem that we
+can solve using linear algebra and computational geometry, and it is in fact
+part of the basics for more complex tasks in the computer vision.
+
+In order to define a projective transformation, we need to define first the
+homogeneous coordinates:
+
+In mathematics, homogeneous coordinates or projective coordinates, introduced
+by August Ferdinand Möbius in his 1827 work Der barycentrische Calcül, are a
+system of coordinates used in projective geometry, as Cartesian coordinates are
+ used in Euclidean geometry. They have the advantage that the coordinates of
+ points, including points at infinity, can be represented using finite
+coordinates. \cite{wiki:homogeneous}
+
+Formally a projectivity is is an invertible mapping h from IP 2 to itself such
+that three points x 1 , x 2 and x 3 lie on the same line if and only if
+h(x 1 ), h(x 2 ) and h(x 3 ) do.
+
+
+A planar projective transformation is a linear transformation on homogeneous
+3-vectors represented by a non-singular 3 x 3 matrix
+
 \subsection{Homography}
+
 \cite{Hartley}
 
 \subsection{Bilinear interpolation}
@@ -471,46 +377,25 @@ Computer vision, 2d projective transformations, 2d geometry, homographies.
 
 \subsection{Remove perspective}
 
+\includegraphics[scale=0.2]{../img/original}
+\includegraphics[scale=0.15]{../img/transformed}
+
 \subsection{Scanner}
+
+\includegraphics[scale=0.2]{../img/scan}
+\includegraphics[scale=0.2]{../img/scan_transformed}
 
 \subsection{Add perspective}
 
+\includegraphics[scale=0.2]{../img/cat}
+\includegraphics[scale=0.2]{../img/cat_transformed}
+
 \section{Conclusion}
-\blindtext
 
-% if have a single appendix:
-%\appendix[Proof of the Zonklar Equations]
-% or
-%\appendix  % for no appendix heading
-% do not use \section anymore after \appendix, only \section*
-% is possibly needed
-
-% use appendices with more than one appendix
-% then use \section to start each appendix
-% you must declare a \section before using any
-% \subsection or using \label (\appendices by itself
-% starts a section numbered zero.)
-%
-
-
-% \appendices
-% \section{Proof of the First Zonklar Equation}
-% Some text for the appendix.
-%
-% % use section* for acknowledgement
-% \section*{Acknowledgment}
-%
-%
-% The authors would like to thank... ASasdfsD
-%
-
-% references section
+It was cool :D
 
 \bibliographystyle{unsrt}
 \bibliography{report}
-
-
-
 
 % that's all folks
 \end{document}

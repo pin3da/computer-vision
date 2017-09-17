@@ -69,7 +69,11 @@ def transform_point(point, H):
 
 
 def apply_homography(X, H, interpolate_point):
-    """Returns a new image which is equal to X*H"""
+    """Returns a new image which is equal to X*H
+    :param X: original image
+    :param H: homography matrix
+    :param interpolate_point: function to interpolate the points
+    """
     # uint8 is to guarantee integers in the interval [0, 255]
     ans = np.zeros(X.shape, np.uint8)
 
@@ -123,3 +127,55 @@ def round_interpolation(p, X):
     if valid(x, y, X):
         return X[y][x]
     return np.array([0, 0, 0])
+
+
+def turn(a, b, c):
+    """Returns positive if a-b-c makes a left turn.
+    Returns negative if a-b-c makes a right turn.
+    Returns 0.0 if a-b-c are colineal.
+    """
+    z = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+    if abs(z) < 1e-9:
+        return 0.0
+    return z
+
+
+def point_in_polygon(p, poly):
+    """ Determines if the point :p: is inside the polygon :poly:
+    The polygon must be convex.
+    Checks if all the edges of the polygon are to the same side of the point p
+    """
+    mask = 0
+    n = len(poly)
+    for i in range(n):
+        j = (i + 1) % n
+        z = turn(poly[i], poly[j], p)
+        if z < 0.0:
+            mask |= 1
+        elif z > 0.0:
+            mask |= 2
+        elif z == 0.0:
+            return False
+
+        if mask == 3:  # Both sides seen.
+            return False
+    return mask != 0  # Exactly one side seen.
+
+
+def embed(X, polygon_embed, background, H, interpolate_point):
+    # uint8 is to guarantee integers in the interval [0, 255]
+    ans = np.zeros(background.shape, np.uint8)
+
+    # Inverts the homography to "find" the points in the new image from the
+    # interpolation of points in the original image.
+    H = np.linalg.pinv(H)
+
+    # Apply the same interpolation to all the pixels
+    for y in range(background.shape[0]):
+        for x in range(background.shape[1]):
+            if point_in_polygon((x, y), polygon_embed):
+                p = transform_point((x, y), H)
+                ans[y][x] = interpolate_point(p, X)
+            else:
+                ans[y][x] = background[y][x]
+    return ans

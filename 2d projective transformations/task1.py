@@ -14,7 +14,7 @@ DIR = os.path.dirname(__file__)
 
 
 if __name__ == "__main__":
-    X = np.array([[383, 216], [908, 126], [906, 655], [389, 604]])
+    X = np.array([[383, 215], [909, 124], [906, 665], [389, 604]])
     Xp = np.array([[344, 198], [944, 198], [944, 689], [344, 689]])
     H = compute_homography(X, Xp)
     print("homography matrix:\n", H)
