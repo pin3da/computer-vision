@@ -13,10 +13,12 @@ DIR = os.path.dirname(__file__)
 
 
 if __name__ == "__main__":
-
+    # Read original matrix
     img = cv2.imread(os.path.join(DIR, './img/scan.jpg'))
     dy, dx, _ = img.shape
+    # Use the size of the image as target
     Xp = np.array([[0, 0], [dx, 0], [dx, dy], [0, dy]])
+
     X = np.array([[100, 37], [869, 178], [870, 1105], [105, 1257]])
     H = compute_homography(X, Xp)
     print("homography matrix:\n", H)

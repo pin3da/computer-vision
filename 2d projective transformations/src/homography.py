@@ -103,8 +103,10 @@ def biliniear_interpolation(p, X):
     x2 = x1 + 1
     y1 = floor(p[1])
     y2 = y1 + 1
+    # Checks if all the points are inside the image, returns [0,0,0] otherwise.
     if valid(x1, y1, X) and valid(x1, y2, X) and valid(x2, y1, X) and valid(x2, y2, X):
         new_pixel = np.array([0, 0, 0])
+        # Apply the same transformation to each color
         for c in range(0, 3):
             left = np.array([[x2 - x, x - x1]])
             mid = np.array([
@@ -124,15 +126,16 @@ def round_interpolation(p, X):
     x, y = p
     x = int(round(x))
     y = int(round(y))
+    # Checks if the pixel exists in the original matrix
     if valid(x, y, X):
         return X[y][x]
     return np.array([0, 0, 0])
 
 
 def turn(a, b, c):
-    """Returns positive if a-b-c makes a left turn.
-    Returns negative if a-b-c makes a right turn.
-    Returns 0.0 if a-b-c are colineal.
+    """Returns positive if the points a-b-c makes a left turn.
+    Returns negative if the points a-b-c makes a right turn.
+    Returns 0.0 if the points a-b-c are colineal.
     """
     z = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
     if abs(z) < 1e-9:
@@ -173,6 +176,7 @@ def embed(X, polygon_embed, background, H, interpolate_point):
     # Apply the same interpolation to all the pixels
     for y in range(background.shape[0]):
         for x in range(background.shape[1]):
+            # Only transform the pixels that are in the embedding area
             if point_in_polygon((x, y), polygon_embed):
                 p = transform_point((x, y), H)
                 ans[y][x] = interpolate_point(p, X)

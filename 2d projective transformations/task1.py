@@ -21,6 +21,8 @@ if __name__ == "__main__":
 
     # Load the original matrix
     img = cv2.imread(os.path.join(DIR, './img/original.jpg'))
+
+    # Apply the same homography matrix with different estimation methods
     img_out = apply_homography(img, H, biliniear_interpolation)
     img_round = apply_homography(img, H, round_interpolation)
 

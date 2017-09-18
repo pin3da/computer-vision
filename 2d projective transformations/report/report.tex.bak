@@ -373,7 +373,7 @@ perspective.
 \section{Introduction}
 
 A projective transformation is a natural deformation of the geometrical
-shapes that we see every day, for example when we take photographies of doors,
+shapes that we see every day, for example when we take photografies of doors,
 windows and similar objects, they do not look like their original shapes
 (rectangles) but our brain automatically removes the perspective and we can
 know how the objects really look. This is a very interesting problem that we
@@ -394,10 +394,10 @@ and $h(x_3)$ do \cite{Hartley}. This is also known as
 
 \subsection{Homography estimation}
 
-For the goal of this work, we only focus in the \textit{planar} projective
+For the goal of this work, we only focus in the \textit{plannar} projective
 transformations, they are linear transformations on homogeneous 3-vectors
 represented by a non-singular matrix of size 3 x 3 and we can use them to add
-or remove perspective on the images as it is shown in the further sections:
+or remove perpective on the images as it is shown in the further sections:
 
 \[
 \begin{pmatrix} x'_1 \\ x'_2 \\ x'_3 \end{pmatrix}
@@ -413,7 +413,7 @@ or remove perspective on the images as it is shown in the further sections:
 In matrix notation: $x' = Hx$ \\
 
 It can be shown that we can estimate the matrix $h$ using 4 matching
-correspondences between $x$ and $x'$ where each correspondence induces a pair
+correspondencies between $x$ and $x'$ where each correspondency induces a pair
 of equations to the linear system (assuming $h_{33} = 1$):
 
 \[
@@ -447,7 +447,7 @@ solution) to gain robustness.
 
 \subsection{Bilinear interpolation}
 
-After finding the homography matrix $H$ we can easily map each point from
+After finding the homography matrix $H$ we can easlily map each point from
 one image to the other using the above equation $x' = Hx$, however this implies
 a problem because all the coordinates in the images are integers but after the
 transformation they can be real numbers. To solve this problem, each point in
@@ -479,7 +479,7 @@ data.
 
 This experiment takes a picture of a real scene (fig \ref{original}) and
 removes the projectivity on the image (fig \ref{transformed}).
-To perform this, the pixels of the 4 corners of the mirror were selected and the
+To perfom this, the pixels of the 4 corners of the mirror were selected and the
 homography matrix was estimated. Then the process to reconstruct the
  ``destination'' image was done using the bilinear interpolation.
 
@@ -541,7 +541,7 @@ and (b) was taken the nearest integer pixel to the real coordinates.
 
 In this section, the same program was used to simulate a scanner, in this case
 the reference points were the corners of the paper sheet and the destination
-coordinates where the dimensions of the image.
+coordinates where the dimentions of the image.
 
 It would be very interesting to merge this application with the corner detection
 algorithms seen in class, to automate the process.
@@ -576,15 +576,15 @@ The result of this is the fig \ref{cat-embed}.
 
 As the reconstruction algorithm iterates over the destination image, it is
 necessary to determine if a pixel is inside of the ``embedding area''. To
-achieve this, I wrote another auxiliary function to determine if a point is
+achive this, I wrote another auxiliary function to determine if a point is
 inside a convex polygon, this function basically checks that the point is always
 to the same side of the edges of the polygon. The side of the point depends
 if the edges are traversed clockwise or anticlockwise. Besides this, no other
-code different from the one that was already used was necessary.
+code different of the already used was necessary.
 
 \begin{figure}
 \includegraphics[scale=0.2]{../img/cat_transformed}
-\caption{Embedded image into another scene}
+\caption{Embeded image into another scene}
 \label{cat-embed}
 \end{figure}
 
@@ -593,7 +593,7 @@ code different from the one that was already used was necessary.
 The theory about 2D projective transformations worked as expected. \\
 
 It is very important to use robust methods to solve the linear system of the
-homography, with this we can add more matching points and avoid errors or wrong
+homography, with this we can add more matching points and avoid erros or wrong
 transformations. \\
 
 The technique used to estimate can highly increase (or decrease) the quality
@@ -601,9 +601,8 @@ of the results as we saw in the fig \ref{pixel-estimation}, other future
 improvements of this work could be to implement different estimation algorithms,
 they can be easily added to the reconstruction. \\
 
-As result, I constructed a basic library to work with planar projective
+As result, I constructed a basic library to work with plannar projective
 transformations that can be used from other programs.
-
 
 \bibliographystyle{unsrt}
 \bibliography{report}
