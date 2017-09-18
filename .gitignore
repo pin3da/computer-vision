@@ -2,3 +2,4 @@
 *report/report.aux
 *.bbl
 *.blg
+*.pyc
