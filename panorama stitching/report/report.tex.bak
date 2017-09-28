@@ -1,0 +1,611 @@
+
+%% bare_jrnl.tex
+%% V1.3
+%% 2007/01/11
+%% by Michael Shell
+%% see http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.7 or later) with an IEEE journal paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/
+%% and
+%% http://www.ieee.org/
+
+
+\documentclass[journal]{IEEEtran}
+\usepackage{blindtext}
+\usepackage{graphicx}
+
+
+% Some very useful LaTeX packages include:
+% (uncomment the ones you want to load)
+
+% Code syntax
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C++,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=2
+}
+
+% \setlength{\columnsep}{0.5in}
+% \setlength{\columnseprule}{1px}
+
+% *** MISC UTILITY PACKAGES ***
+%
+%\usepackage{ifpdf}
+% Heiko Oberdiek's ifpdf.sty is very useful if you need conditional
+% compilation based on whether the output is pdf or dvi.
+% usage:
+% \ifpdf
+%   % pdf code
+% \else
+%   % dvi code
+% \fi
+% The latest version of ifpdf.sty can be obtained from:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/oberdiek/
+% Also, note that IEEEtran.cls V1.7 and later provides a builtin
+% \ifCLASSINFOpdf conditional that works the same way.
+% When switching from latex to pdflatex and vice-versa, the compiler may
+% have to be run twice to clear warning/error messages.
+
+
+% *** CITATION PACKAGES ***
+%
+
+\usepackage{cite}
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+  % \usepackage[pdftex]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../pdf/}{../jpeg/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\else
+  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
+  % will default to the driver specified in the system graphics.cfg if no
+  % driver is specified.
+  % \usepackage[dvips]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../eps/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.eps}
+\fi
+% graphicx was written by David Carlisle and Sebastian Rahtz. It is
+% required if you want graphics, photos, etc. graphicx.sty is already
+% installed on most LaTeX systems. The latest version and documentation can
+% be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/graphics/
+% Another good source of documentation is "Using Imported Graphics in
+% LaTeX2e" by Keith Reckdahl which can be found as epslatex.ps or
+% epslatex.pdf at: http://www.ctan.org/tex-archive/info/
+%
+% latex, and pdflatex in dvi mode, support graphics in encapsulated
+% postscript (.eps) format. pdflatex in pdf mode supports graphics
+% in .pdf, .jpeg, .png and .mps (metapost) formats. Users should ensure
+% that all non-photo figures use a vector format (.eps, .pdf, .mps) and
+% not a bitmapped formats (.jpeg, .png). IEEE frowns on bitmapped formats
+% which can result in "jaggedy"/blurry rendering of lines and letters as
+% well as large increases in file sizes.
+%
+% You can find documentation about the pdfTeX application at:
+% http://www.tug.org/applications/pdftex
+
+
+
+
+
+% *** MATH PACKAGES ***
+
+
+\usepackage[cmex10]{amsmath}
+
+
+% A popular package from the American Mathematical Society that provides
+% many useful and powerful commands for dealing with mathematics. If using
+% it, be sure to load this package with the cmex10 option to ensure that
+% only type 1 fonts will utilized at all point sizes. Without this option,
+% it is possible that some math symbols, particularly those within
+% footnotes, will be rendered in bitmap form which will result in a
+% document that can not be IEEE Xplore compliant!
+%
+% Also, note that the amsmath package sets \interdisplaylinepenalty to 10000
+% thus preventing page breaks from occurring within multiline equations. Use:
+%\interdisplaylinepenalty=2500
+% after loading amsmath to restore such page breaks as IEEEtran.cls normally
+% does. amsmath.sty is already installed on most LaTeX systems. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/amslatex/math/
+
+
+
+
+
+% *** SPECIALIZED LIST PACKAGES ***
+%
+%\usepackage{algorithmic}
+% algorithmic.sty was written by Peter Williams and Rogerio Brito.
+% This package provides an algorithmic environment fo describing algorithms.
+% You can use the algorithmic environment in-text or within a figure
+% environment to provide for a floating algorithm. Do NOT use the algorithm
+% floating environment provided by algorithm.sty (by the same authors) or
+% algorithm2e.sty (by Christophe Fiorio) as IEEE does not use dedicated
+% algorithm float types and packages that provide these will not provide
+% correct IEEE style captions. The latest version and documentation of
+% algorithmic.sty can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/algorithms/
+% There is also a support site at:
+% http://algorithms.berlios.de/index.html
+% Also of interest may be the (relatively newer and more customizable)
+% algorithmicx.sty package by Szasz Janos:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/algorithmicx/
+
+
+
+
+% *** ALIGNMENT PACKAGES ***
+%
+%\usepackage{array}
+% Frank Mittelbach's and David Carlisle's array.sty patches and improves
+% the standard LaTeX2e array and tabular environments to provide better
+% appearance and additional user controls. As the default LaTeX2e table
+% generation code is lacking to the point of almost being broken with
+% respect to the quality of the end results, all users are strongly
+% advised to use an enhanced (at the very least that provided by array.sty)
+% set of table tools. array.sty is already installed on most systems. The
+% latest version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/tools/
+
+
+%\usepackage{mdwmath}
+%\usepackage{mdwtab}
+% Also highly recommended is Mark Wooding's extremely powerful MDW tools,
+% especially mdwmath.sty and mdwtab.sty which are used to format equations
+% and tables, respectively. The MDWtools set is already installed on most
+% LaTeX systems. The lastest version and documentation is available at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/mdwtools/
+
+
+% IEEEtran contains the IEEEeqnarray family of commands that can be used to
+% generate multiline equations as well as matrices, tables, etc., of high
+% quality.
+
+
+%\usepackage{eqparbox}
+% Also of notable interest is Scott Pakin's eqparbox package for creating
+% (automatically sized) equal width boxes - aka "natural width parboxes".
+% Available at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/eqparbox/
+
+
+\usepackage{subcaption}
+
+
+
+% *** SUBFIGURE PACKAGES ***
+% \usepackage[tight,footnotesize]{subfigure}
+% subfigure.sty was written by Steven Douglas Cochran. This package makes it
+% easy to put subfigures in your figures. e.g., "Figure 1a and 1b". For IEEE
+% work, it is a good idea to load it with the tight package option to reduce
+% the amount of white space around the subfigures. subfigure.sty is already
+% installed on most LaTeX systems. The latest version and documentation can
+% be obtained at:
+% http://www.ctan.org/tex-archive/obsolete/macros/latex/contrib/subfigure/
+% subfigure.sty has been superceeded by subfig.sty.
+
+
+
+% \usepackage[caption=false]{caption}
+% \usepackage[font=footnotesize]{subfig}
+% subfig.sty, also written by Steven Douglas Cochran, is the modern
+% replacement for subfigure.sty. However, subfig.sty requires and
+% automatically loads Axel Sommerfeldt's caption.sty which will override
+% IEEEtran.cls handling of captions and this will result in nonIEEE style
+% figure/table captions. To prevent this problem, be sure and preload
+% caption.sty with its "caption=false" package option. This is will preserve
+% IEEEtran.cls handing of captions. Version 1.3 (2005/06/28) and later
+% (recommended due to many improvements over 1.2) of subfig.sty supports
+% the caption=false option directly:
+%\usepackage[caption=false,font=footnotesize]{subfig}
+%
+% The latest version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/subfig/
+% The latest version and documentation of caption.sty can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/caption/
+
+
+
+% *** FLOAT PACKAGES ***
+%
+%\usepackage{fixltx2e}
+% fixltx2e, the successor to the earlier fix2col.sty, was written by
+% Frank Mittelbach and David Carlisle. This package corrects a few problems
+% in the LaTeX2e kernel, the most notable of which is that in current
+% LaTeX2e releases, the ordering of single and double column floats is not
+% guaranteed to be preserved. Thus, an unpatched LaTeX2e can allow a
+% single column figure to be placed prior to an earlier double column
+% figure. The latest version and documentation can be found at:
+% http://www.ctan.org/tex-archive/macros/latex/base/
+
+
+
+%\usepackage{stfloats}
+% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
+% the ability to do double column floats at the bottom of the page as well
+% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
+% LaTeX2e). It also provides a command:
+%\fnbelowfloat
+% to enable the placement of footnotes below bottom floats (the standard
+% LaTeX2e kernel puts them above bottom floats). This is an invasive package
+% which rewrites many portions of the LaTeX2e float routines. It may not work
+% with other packages that modify the LaTeX2e float routines. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/sttools/
+% Documentation is contained in the stfloats.sty comments as well as in the
+% presfull.pdf file. Do not use the stfloats baselinefloat ability as IEEE
+% does not allow \baselineskip to stretch. Authors submitting work to the
+% IEEE should note that IEEE rarely uses double column equations and
+% that authors should try to avoid such use. Do not be tempted to use the
+% cuted.sty or midfloat.sty packages (also by Sigitas Tolusis) as IEEE does
+% not format its papers in such ways.
+
+
+% *** PDF, URL AND HYPERLINK PACKAGES ***
+%
+%\usepackage{url}
+% url.sty was written by Donald Arseneau. It provides better support for
+% handling and breaking URLs. url.sty is already installed on most LaTeX
+% systems. The latest version can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/misc/
+% Read the url.sty source comments for usage information. Basically,
+% \url{my_url_here}.
+
+
+
+
+
+% *** Do not adjust lengths that control margins, column widths, etc. ***
+% *** Do not use packages that alter fonts (such as pslatex).         ***
+% There should be no need to do such things with IEEEtran.cls V1.6 and later.
+% (Unless specifically asked to do so by the journal or conference you plan
+% to submit to, of course. )
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{2D Projective Transformations.}
+%
+%
+% author names and IEEE memberships
+% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
+% a structure at a ~ so this keeps an author's name from being broken across
+% two lines.
+% use \thanks{} to gain access to the first footnote area
+% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
+% was not built to handle multiple paragraphs
+%
+
+\author{Manuel~Felipe~Pineda~Loaiza% <-this % stops a space
+% \thanks{M. Shell is with the Department
+% of Electrical and Computer Engineering, Georgia Institute of Technology, Atlanta,
+% GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this % stops a space
+% \thanks{J. Doe and J. Doe are with Anonymous University.}% <-this % stops a space
+% \thanks{Manuscript received April 19, 2005; revised January 11, 2007.}
+}
+
+% note the % following the last \IEEEmembership and also \thanks -
+% these prevent an unwanted space from occurring between the last author name
+% and the end of the author line. i.e., if you had this:
+%
+% \author{....lastname \thanks{...} \thanks{...} }
+%                     ^------------^------------^----Do not want these spaces!
+%
+% a space would be appended to the last name and could cause every name on that
+% line to be shifted left slightly. This is one of those "LaTeX things". For
+% instance, "\textbf{A} \textbf{B}" will typeset as "A B" not "AB". To get
+% "AB" then you have to do: "\textbf{A}\textbf{B}"
+% \thanks is no different in this regard, so shield the last } of each \thanks
+% that ends a line with a % and do not let a space in before the next \thanks.
+% Spaces after \IEEEmembership other than the last one are OK (and needed) as
+% you are supposed to have spaces between the names. For what it is worth,
+% this is a minor point as most people would not even notice if the said evil
+% space somehow managed to creep in.
+
+
+
+% The paper headers
+\markboth{Computer vision class, Universidad Tecnologica de Pereira ~ 2017-II}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for Journals}
+
+
+% make the title area
+\maketitle
+
+
+\begin{abstract}
+%\boldmath
+In this work I applied the theory about 2D projective transformations studied
+in the computer vision class. The work consists of three experiments, the first
+experiment aims to remove the perspective of an image, the second one simulates
+a scanner, and the last one applies the perspective to one image in order to
+embed it into another image.
+
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+Computer vision, 2d projective transformations, 2d geometry, homographies,
+perspective.
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+A projective transformation is a natural deformation of the geometrical
+shapes that we see every day, for example when we take photografies of doors,
+windows and similar objects, they do not look like their original shapes
+(rectangles) but our brain automatically removes the perspective and we can
+know how the objects really look. This is a very interesting problem that we
+can solve using linear algebra and computational geometry, and it is in fact
+part of the basics for more complex tasks in the computer vision.
+
+In order to define a projective transformation, we need to define first the
+homogeneous coordinates: They are a system of coordinates used in projective
+geometry, as Cartesian coordinates are used in Euclidean geometry. They have
+the advantage that the coordinates of points, including points at infinity,
+can be represented using finite coordinates. \cite{wiki:homogeneous}
+
+Formally a projectivity is is an invertible mapping h from the projective
+space to itself (the space in homogeneous coordinates) such that three points
+$x_1$ , $x_2$ and $x_3$ lie on the same line if and only if $h(x_1)$, $h(x_2)$
+and $h(x_3)$ do \cite{Hartley}. This is also known as
+\textbf{\textit{homography}}.
+
+\subsection{Homography estimation}
+
+For the goal of this work, we only focus in the \textit{plannar} projective
+transformations, they are linear transformations on homogeneous 3-vectors
+represented by a non-singular matrix of size 3 x 3 and we can use them to add
+or remove perpective on the images as it is shown in the further sections:
+
+\[
+\begin{pmatrix} x'_1 \\ x'_2 \\ x'_3 \end{pmatrix}
+=
+  \begin{pmatrix}
+    h_{11} & h_{12} & h_{13} \\
+    h_{21} & h_{22} & h_{23} \\
+    h_{31} & h_{32} & h_{33}
+  \end{pmatrix}
+\begin{pmatrix} x_1 \\ x_2 \\ x_3 \end{pmatrix}
+\]
+
+In matrix notation: $x' = Hx$ \\
+
+It can be shown that we can estimate the matrix $h$ using 4 matching
+correspondencies between $x$ and $x'$ where each correspondency induces a pair
+of equations to the linear system (assuming $h_{33} = 1$):
+
+\[
+\begin{pmatrix}
+  x & y & 1 & 0 & 0 & 0 & -x'x & -x'x \\
+  0 & 0 & 0 & x & y & 1 & -y'x & -y'y
+\end{pmatrix}
+\begin{pmatrix}
+  h_{11} \\
+  h_{12} \\
+  h_{13} \\
+  h_{21} \\
+  h_{22} \\
+  h_{23} \\
+  h_{31} \\
+  h_{32}
+\end{pmatrix}
+ = \begin{pmatrix}
+  x' \\
+  y'
+\end{pmatrix}
+\]
+
+
+Note that this points correspond to the original matrices (images) in euclidean
+coordinates, not homogeneous coordinates. \\
+
+This was programmed as a function that can receive 4 or more points and solves
+the linear system using numpy.linalg.lstsq \cite{numpy:lstsq} (least-squares
+solution) to gain robustness.
+
+\subsection{Bilinear interpolation}
+
+After finding the homography matrix $H$ we can easlily map each point from
+one image to the other using the above equation $x' = Hx$, however this implies
+a problem because all the coordinates in the images are integers but after the
+transformation they can be real numbers. To solve this problem, each point in
+the destination image is computed as an estimation of its corresponding point
+in the origin image.
+
+\begin{lstlisting}[language=Python]
+for y in range(destination.shape[0]):
+    for x in range(destination.shape[1]):
+        p = transform_point((x, y), H)
+        # interpolate_point receives the point and the matrix to interpolate from.
+        ans[y][x] = interpolate_point(p, original)
+return ans
+\end{lstlisting}
+
+In this case, I used a bilinear interpolation \cite{wiki:bilinear} as the
+estimation method for the experiments.
+
+\section{Experiments}
+
+This section describes a set of experiments to work with linear projective
+transformations. All the experiments were done in python3.6 using OpenCV to
+read and write the images, and numpy to perform mathematic operations with the
+data.
+
+\break
+
+\subsection{Remove perspective}
+
+This experiment takes a picture of a real scene (fig \ref{original}) and
+removes the projectivity on the image (fig \ref{transformed}).
+To perfom this, the pixels of the 4 corners of the mirror were selected and the
+homography matrix was estimated. Then the process to reconstruct the
+ ``destination'' image was done using the bilinear interpolation.
+
+\begin{figure}
+\includegraphics[scale=0.2]{../img/original}
+\caption{Original image with perspective}
+\label{original}
+\end{figure}
+
+% \begin{lstlisting}[language=Python]
+% # Corners in the original matrix
+% X = np.array([
+%   [383, 215], [909, 124],
+%   [906, 665], [389, 604],
+% ])
+% # Corners in the destionation matrix
+% Xp = np.array([
+%   [344, 198], [944, 198],
+%   [944, 689], [344, 689],
+% ])
+%
+% H = compute_homography(X, Xp)
+%
+% # Load the original matrix
+%
+% img = cv2.imread(os.path.join(DIR, './img/original.jpg'))
+% img_out = apply_homography(img, H, biliniear_interpolation)
+% \end{lstlisting}
+
+\begin{figure}
+\includegraphics[scale=0.15]{../img/transformed}
+\caption{Removed perspective using linear projective transformations}
+\label{transformed}
+\end{figure}
+
+In this task I used two different estimations of the pixels to compare their
+performance, they are shown in the figure \ref{pixel-estimation}.
+Both were generated from the same image, (a) was using a bilinear interpolation,
+and (b) was taken the nearest integer pixel to the real coordinates.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.2\textwidth}
+        \includegraphics[scale=0.4]{../img/bilinear}
+        \caption{Bilinear}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.2\textwidth}
+        \includegraphics[scale=0.4]{../img/rounded}
+        \caption{Nearest integer pixel}
+    \end{subfigure}
+    \caption{Pixel estimation}
+    \label{pixel-estimation}
+\end{figure}
+
+
+\subsection{Scanner}
+
+In this section, the same program was used to simulate a scanner, in this case
+the reference points were the corners of the paper sheet and the destination
+coordinates where the dimentions of the image.
+
+It would be very interesting to merge this application with the corner detection
+algorithms seen in class, to automate the process.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.2\textwidth}
+        \includegraphics[scale=0.14]{../img/scan}
+        \caption{Original picture}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.2\textwidth}
+        \includegraphics[scale=0.1]{../img/scan_transformed}
+        \caption{transformed image that simulated the scan of the image}
+    \end{subfigure}
+    \caption{Scanner application}
+\end{figure}
+
+
+\subsection{Add perspective}
+
+\begin{figure}
+\includegraphics[scale=0.25]{../img/cat}
+\caption{Image ``without perspective''}
+\label{cat}
+\end{figure}
+
+In this experiment, I took an image ``without perspective'' (fig \ref{cat}) and
+then apply it a projective transformation to embed the image into another image.
+The result of this is the fig \ref{cat-embed}.
+
+As the reconstruction algorithm iterates over the destination image, it is
+necessary to determine if a pixel is inside of the ``embedding area''. To
+achive this, I wrote another auxiliary function to determine if a point is
+inside a convex polygon, this function basically checks that the point is always
+to the same side of the edges of the polygon. The side of the point depends
+if the edges are traversed clockwise or anticlockwise. Besides this, no other
+code different of the already used was necessary.
+
+\begin{figure}
+\includegraphics[scale=0.2]{../img/cat_transformed}
+\caption{Embeded image into another scene}
+\label{cat-embed}
+\end{figure}
+
+\section{Conclusion}
+
+The theory about 2D projective transformations worked as expected. \\
+
+It is very important to use robust methods to solve the linear system of the
+homography, with this we can add more matching points and avoid erros or wrong
+transformations. \\
+
+The technique used to estimate can highly increase (or decrease) the quality
+of the results as we saw in the fig \ref{pixel-estimation}, other future
+improvements of this work could be to implement different estimation algorithms,
+they can be easily added to the reconstruction. \\
+
+As result, I constructed a basic library to work with plannar projective
+transformations that can be used from other programs.
+
+\bibliographystyle{unsrt}
+\bibliography{report}
+
+% that's all folks
+\end{document}
