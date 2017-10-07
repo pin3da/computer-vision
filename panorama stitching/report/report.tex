@@ -19,6 +19,7 @@
 \documentclass[journal]{IEEEtran}
 \usepackage{blindtext}
 \usepackage{graphicx}
+\usepackage{float}
 
 
 % Some very useful LaTeX packages include:
@@ -357,7 +358,7 @@
 \begin{abstract}
 %\boldmath
 This work covers the problem of fully automated panorama stitching, this is a
-common computer vision task which combines multiple images with overlaping sections
+common computer vision task which combines multiple images with overlapping sections
 to produce a larger image. I applied the theory about 2D projective transformations,
 features detection, local invariant descriptors and matching algorithms to produce
 a small library for image stitching.
@@ -370,48 +371,66 @@ Computer vision, 2d projective transformations, homography,
 perspective, RANSAC, descriptors, matching.
 \end{IEEEkeywords}
 
-\section{Introduction}
+\section{Image stitching stages.}
 
 The image stitching is a process to combine several images into a larger one,
-It can be used in several aplications like the creation of high resolution
-images or the image aligment process used in the video stabilization. This is
+It can be used in several applications like the creation of high resolution
+images or the image alignment process used in the video stabilization. This is
 an interesting problem with several stages in which we apply different
 techniques of computer vision. In this section, I will present an introduction
 to those stages.
 
 \subsection{Feature detection}
 
-This aims to detect "interesting" parts of an image, currenty there are serveral
-techniques to achieve that based in the detection of edges, corner and "blobs".
+This aims to detect ``interesting'' parts of an image, those points are
+generally detected when there are big changes of illumination
+or colors, as humans we can see them in the corners and edges of the objects.
+The most common techniques for edge detector are the sobel filter,
+and Canny edge detector, the Harry's corner detection and more. The basis for
+this methods are the derivatives of the image and the discontinuities.
 
-Sobel, Canny, Harris, Laplacian of Gaussians, etc.
+\begin{figure}[H]
+\includegraphics[scale=0.16]{../img/edge_detection}
+\caption{Example of edge detection using Canny edge detector. Taken from
+wikipedia.com}
+\label{canny}
+\end{figure}
 
-\subsection{Descriptors}
+\subsection{Visual descriptors}
 
-Sift
+The visual descriptors are an extension of the features detected in the
+previous subsection. They pretend to collect ``information'' about the
+image that is used as an input for other stages. In this case, this
+information is used to generate a match of key points between a pair of
+images. In this work I used an Scale-invariant feature transform \cite{wiki:sift}
+(SIFT ) as visual descriptor.
+
+\begin{figure}[H]
+\includegraphics[scale=0.2]{../img/descriptor_example}
+\caption{Plot of feature vectors found using SIFT.}
+\label{canny}
+\end{figure}
 
 \subsection{Matching}
 
-Approximate Nearest Neighbors
+Once we found the visual descriptors in two images, the next step is to
+find a match between the descriptors in the first image with the descriptors
+in the second one. For this task I used the FLANN-based matcher provided
+by OpenCV and suggested in \cite{opencv:tutorial}.
+
+\begin{figure}[H]
+\includegraphics[scale=0.1]{../img/matches1}
+\caption{Plot of the matching points between two images.}
+\label{canny}
+\end{figure}
 
 \subsection{Homography estimation}
 
-\[
-\begin{pmatrix} x'_1 \\ x'_2 \\ x'_3 \end{pmatrix}
-=
-  \begin{pmatrix}
-    h_{11} & h_{12} & h_{13} \\
-    h_{21} & h_{22} & h_{23} \\
-    h_{31} & h_{32} & h_{33}
-  \end{pmatrix}
-\begin{pmatrix} x_1 \\ x_2 \\ x_3 \end{pmatrix}
-\]
-
-In matrix notation: $x' = Hx$ \\
-
-It can be shown that we can estimate the matrix $h$ using 4 matching
-correspondences between $x$ and $x'$ where each correspondence induces a pair
-of equations to the linear system (assuming $h_{33} = 1$):
+After find the matches, we need to compute a projective transformation
+in order to put the two images in the same plane. It can be shown that we
+can estimate the projective transformation $h$ using 4 or more matching
+correspondences between the two images $x$ and $x'$ using the following
+system of equations for each pair of correspondences:
 
 \[
 \begin{pmatrix}
@@ -434,47 +453,86 @@ of equations to the linear system (assuming $h_{33} = 1$):
 \end{pmatrix}
 \]
 
+We face a problem here because the previous stage could generate several
+outliers for our system of equations. To solve this, OpenCV provides
+the implementation of RANSAC \cite{wiki:ransac} to automatically remove
+the outliers and compute the best possible solution.
 
-Note that this points correspond to the original matrices (images) in euclidean
-coordinates, not homogeneous coordinates. \\
+After we found the projective transformation, we just need to map one image to
+the same plane of the other one. This is the last step for the panorama
+stitching we can see the result of this in the figures \ref{panorama-stitching}
+and \ref{stitching-result}.
 
-This was programmed as a function that can receive 4 or more points and solves
-the linear system using numpy.linalg.lstsq \cite{numpy:lstsq} (least-squares
-solution) to gain robustness.
+\begin{figure}
+\centering
+\begin{subfigure}[b]{0.2\textwidth}
+\includegraphics[scale=0.11]{../img/t1}
+\caption{left side image of the panorama stitching}
+\end{subfigure}
+~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+%(or a blank line to force the subfigure onto a new line)
+\begin{subfigure}[b]{0.2\textwidth}
+\includegraphics[scale=0.11]{../img/t2}
+\caption{right side of the panorama stitching}
+\end{subfigure}
+\caption{}
+\label{panorama-stitching}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[scale=0.13]{../img/stitch0}
+  \caption{Result of panoramic stitching of two images}
+  \label{stitching-result}
+\end{figure}
 
 \subsection{Crop Contours}
 
+When we stitch two images, the result image width is not exactly the sum of the
+width of the two original images. As the images have an overlapping section, the
+result image will be smaller and will have an empty section in one of the sides
+(right side in this case). In order to handle this problem, I added an automatic
+crop of the contours using the functions \verb!cv2.findContours! and
+\verb!cv2.boundingRect!.
 
 \subsection{Generalization to multiple images}
 
+As the projective transformation is a linear operator, is quite simple to extend
+the algorithm to several images. To achieve this, we just need to keep track
+of all the intermediate projective transformations and carry them in a single
+matrix, with this, we can project all the images to the same plane. The figure
+\ref{stitching-many} is an example of automatic stitching of 3 consecutive
+images.
+
+% \begin{lstlisting}[language=Python]
+% for i, image in enumerate(images):
+%     if i > 0:
+%         H = compute_homography(images[i], images[i - 1])
+%         if H_carry is not None:
+%             H_carry = H_carry.dot(H)
+%         else:
+%             H_carry = H.copy()
+% \end{lstlisting}
+
+
+\begin{figure}
+\includegraphics[scale=0.08]{../img/stitch2}
+\caption{Panorama stitching of three consecutive images.}
+\label{stitching-many}
+\end{figure}
+
 \section{Experiments}
 
-\begin{figure}
-\includegraphics[scale=0.08]{../img/matches1}
-\caption{Embedded image into another scene}
-\label{cat-embed}
-\end{figure}
-
-
-\begin{figure}
-    \centering
-    \begin{subfigure}[b]{0.2\textwidth}
-        \includegraphics[scale=0.06]{../img/matches0}
-        \caption{Bilinear}
-    \end{subfigure}
-    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-      %(or a blank line to force the subfigure onto a new line)
-    \begin{subfigure}[b]{0.2\textwidth}
-        \includegraphics[scale=0.06]{../img/matches1}
-        \caption{Nearest integer pixel}
-    \end{subfigure}
-    \caption{Pixel estimation}
-    \label{pixel-estimation}
-\end{figure}
-
+The images shown in this work (with the exception of the Canny edge Detector
+example) were generated using OpenCV and Python 3.6.
 
 \section{Conclusions}
 
+The fully automatic panorama stitching worked as expected using OpenCV utilities
+and was structured as a Python module for future use.
+
+The result images show a big difference in the color and illumination, this can
+be used as future work to automatically balance the color and the illumination
+making the image more ``smooth''.
 
 
 \bibliographystyle{unsrt}

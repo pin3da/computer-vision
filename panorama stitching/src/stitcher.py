@@ -100,8 +100,8 @@ class Stitcher:
             if m.distance < 0.7 * n.distance:
                 good.append(m)
 
-        MIN_MATCH_COUNT = 10
-        if len(good) > MIN_MATCH_COUNT:
+        # Define the minumum number of good matches
+        if len(good) > 10:
             src_pts = numpy.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
             dst_pts = numpy.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
 
@@ -115,7 +115,7 @@ class Stitcher:
             img2 = cv2.polylines(img2, [numpy.int32(dst)], True, 255, 3, cv2.LINE_AA)
 
         else:
-            print("Not enough matches were found - %d/%d" % (len(good), MIN_MATCH_COUNT))
+            print("Not enough matches were found - %d/%d" % (len(good), 10))
             matchesMask = None
 
         draw_params = dict(

@@ -19,6 +19,7 @@
 \documentclass[journal]{IEEEtran}
 \usepackage{blindtext}
 \usepackage{graphicx}
+\usepackage{float}
 
 
 % Some very useful LaTeX packages include:
@@ -305,7 +306,7 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{2D Projective Transformations.}
+\title{Fully automatic panorama image stitching.}
 %
 %
 % author names and IEEE memberships
@@ -356,65 +357,80 @@
 
 \begin{abstract}
 %\boldmath
-In this work I applied the theory about 2D projective transformations studied
-in the computer vision class. The work consists of three experiments, the first
-experiment aims to remove the perspective of an image, the second one simulates
-a scanner, and the last one applies the perspective to one image in order to
-embed it into another image.
+This work covers the problem of fully automated panorama stitching, this is a
+common computer vision task which combines multiple images with overlaping sections
+to produce a larger image. I applied the theory about 2D projective transformations,
+features detection, local invariant descriptors and matching algorithms to produce
+a small library for image stitching.
 
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-Computer vision, 2d projective transformations, 2d geometry, homographies,
-perspective.
+Computer vision, 2d projective transformations, homography,
+perspective, RANSAC, descriptors, matching.
 \end{IEEEkeywords}
 
-\section{Introduction}
+\section{Image stitching stages.}
 
-A projective transformation is a natural deformation of the geometrical
-shapes that we see every day, for example when we take photografies of doors,
-windows and similar objects, they do not look like their original shapes
-(rectangles) but our brain automatically removes the perspective and we can
-know how the objects really look. This is a very interesting problem that we
-can solve using linear algebra and computational geometry, and it is in fact
-part of the basics for more complex tasks in the computer vision.
+The image stitching is a process to combine several images into a larger one,
+It can be used in several aplications like the creation of high resolution
+images or the image aligment process used in the video stabilization. This is
+an interesting problem with several stages in which we apply different
+techniques of computer vision. In this section, I will present an introduction
+to those stages.
 
-In order to define a projective transformation, we need to define first the
-homogeneous coordinates: They are a system of coordinates used in projective
-geometry, as Cartesian coordinates are used in Euclidean geometry. They have
-the advantage that the coordinates of points, including points at infinity,
-can be represented using finite coordinates. \cite{wiki:homogeneous}
+\subsection{Feature detection}
 
-Formally a projectivity is is an invertible mapping h from the projective
-space to itself (the space in homogeneous coordinates) such that three points
-$x_1$ , $x_2$ and $x_3$ lie on the same line if and only if $h(x_1)$, $h(x_2)$
-and $h(x_3)$ do \cite{Hartley}. This is also known as
-\textbf{\textit{homography}}.
+This aims to detect ``interesting'' parts of an image, those points are
+generally detected when there are big changes of illumination
+or colors, as humans we can see them in the corners and edges of the objects.
+The most common techniques for edge detector are the sobel filter,
+and Canny edge detector, the Harry's corner detection and more. The basis for
+this methods are the derivatives of the image and the discontinuities.
+
+\begin{figure}[H]
+\includegraphics[scale=0.16]{../img/edge_detection}
+\caption{Example of edge detection using Canny edge detector. Taken from
+wikipedia.com}
+\label{canny}
+\end{figure}
+
+\subsection{Visual descriptors}
+
+The visual descriptors are an extention of the features detected in the
+previous subsection. They pretent to collect ``information'' about the
+image that is used as an input for other stages. In this case, this
+information is used to generate a match of keypoints between a pair of
+images. In this work I used an Scale-invariant feature transform \cite{wiki:sift}
+(SIFT ) as visual descriptor.
+
+\begin{figure}[H]
+\includegraphics[scale=0.2]{../img/descriptor_example}
+\caption{Plot of feature vectors found using SIFT.}
+\label{canny}
+\end{figure}
+
+\subsection{Matching}
+
+Once we found the visual descriptors in two images, the next step is to
+find a match between the descriptors in the first image with the descriptors
+in the second one. For this task I used the FLANN-based matcher provided
+by opencv and suggested in \cite{opencv:tutorial}.
+
+\begin{figure}[H]
+\includegraphics[scale=0.1]{../img/matches1}
+\caption{Plot of the matching points between two images.}
+\label{canny}
+\end{figure}
 
 \subsection{Homography estimation}
 
-For the goal of this work, we only focus in the \textit{plannar} projective
-transformations, they are linear transformations on homogeneous 3-vectors
-represented by a non-singular matrix of size 3 x 3 and we can use them to add
-or remove perpective on the images as it is shown in the further sections:
-
-\[
-\begin{pmatrix} x'_1 \\ x'_2 \\ x'_3 \end{pmatrix}
-=
-  \begin{pmatrix}
-    h_{11} & h_{12} & h_{13} \\
-    h_{21} & h_{22} & h_{23} \\
-    h_{31} & h_{32} & h_{33}
-  \end{pmatrix}
-\begin{pmatrix} x_1 \\ x_2 \\ x_3 \end{pmatrix}
-\]
-
-In matrix notation: $x' = Hx$ \\
-
-It can be shown that we can estimate the matrix $h$ using 4 matching
-correspondencies between $x$ and $x'$ where each correspondency induces a pair
-of equations to the linear system (assuming $h_{33} = 1$):
+After find the matches, we need to compute a projective transformation
+in order to put the two images in the same plane. It can be shown that we
+can estimate the projective tranformation $h$ using 4 or more matching
+correspondences between the two images $x$ and $x'$ using the following
+system of equations for each pair of correspondences:
 
 \[
 \begin{pmatrix}
@@ -437,172 +453,87 @@ of equations to the linear system (assuming $h_{33} = 1$):
 \end{pmatrix}
 \]
 
+We face a problem here because the previous stage could generate several
+outliers for our system of equations. To solve this, opencv provides
+the implementation of RANSAC \cite{wiki:ransac} to automatically remove
+the outliers and compute the best possible solution.
 
-Note that this points correspond to the original matrices (images) in euclidean
-coordinates, not homogeneous coordinates. \\
+After we found the projective transformation, we just need to map one image to
+the same plane of the other one. This is the last step for the panorama
+stitching we can see the result of this in the figures \ref{panorama-stitching}
+and \ref{stitching-result}.
 
-This was programmed as a function that can receive 4 or more points and solves
-the linear system using numpy.linalg.lstsq \cite{numpy:lstsq} (least-squares
-solution) to gain robustness.
+\begin{figure}
+\centering
+\begin{subfigure}[b]{0.2\textwidth}
+\includegraphics[scale=0.11]{../img/t1}
+\caption{left side image of the panorama stitching}
+\end{subfigure}
+~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+%(or a blank line to force the subfigure onto a new line)
+\begin{subfigure}[b]{0.2\textwidth}
+\includegraphics[scale=0.11]{../img/t2}
+\caption{right side of the panorama stitching}
+\end{subfigure}
+\caption{}
+\label{panorama-stitching}
+\end{figure}
 
-\subsection{Bilinear interpolation}
+\begin{figure}
+  \includegraphics[scale=0.13]{../img/stitch0}
+  \caption{Result of panoramic stitching of two images}
+  \label{stitching-result}
+\end{figure}
 
-After finding the homography matrix $H$ we can easlily map each point from
-one image to the other using the above equation $x' = Hx$, however this implies
-a problem because all the coordinates in the images are integers but after the
-transformation they can be real numbers. To solve this problem, each point in
-the destination image is computed as an estimation of its corresponding point
-in the origin image.
+\subsection{Crop Contours}
 
-\begin{lstlisting}[language=Python]
-for y in range(destination.shape[0]):
-    for x in range(destination.shape[1]):
-        p = transform_point((x, y), H)
-        # interpolate_point receives the point and the matrix to interpolate from.
-        ans[y][x] = interpolate_point(p, original)
-return ans
-\end{lstlisting}
+When we stitch two images, the resut image width is not exactly the sum of the
+width of the two original images. As the images have an overlaping section, the
+result image will be smaller and will have an empty secction in one of the sides
+(right side in this case). In order to handle this problem, I added an automatic
+crop of the contours using the functions \verb!cv2.findContours! and
+\verb!cv2.boundingRect!.
 
-In this case, I used a bilinear interpolation \cite{wiki:bilinear} as the
-estimation method for the experiments.
+\subsection{Generalization to multiple images}
+
+As the projective transformation is a linear operator, is quite simple to extend
+the algorithm to several images. To achieve this, we just need to keep track
+of all the intermediate projective transformations and carry them in a single
+matrix, with this, we can project all the images to the same plane. The figure
+\ref{stitching-many} is an example of automatic stitching of 3 consecutive
+images.
+
+% \begin{lstlisting}[language=Python]
+% for i, image in enumerate(images):
+%     if i > 0:
+%         H = compute_homography(images[i], images[i - 1])
+%         if H_carry is not None:
+%             H_carry = H_carry.dot(H)
+%         else:
+%             H_carry = H.copy()
+% \end{lstlisting}
+
+
+\begin{figure}
+\includegraphics[scale=0.08]{../img/stitch2}
+\caption{Panorama stitching of three consecutive images.}
+\label{stitching-many}
+\end{figure}
 
 \section{Experiments}
 
-This section describes a set of experiments to work with linear projective
-transformations. All the experiments were done in python3.6 using OpenCV to
-read and write the images, and numpy to perform mathematic operations with the
-data.
+The images shown in this work (with the exeception of the Canny edge Detector
+example) were generated using OpenCV and Python 3.6.
 
-\break
+\section{Conclusions}
 
-\subsection{Remove perspective}
+The fully automatic panorama stitching worked as expected using OpenCV utilities
+and was structured as a Python module for future use.
 
-This experiment takes a picture of a real scene (fig \ref{original}) and
-removes the projectivity on the image (fig \ref{transformed}).
-To perfom this, the pixels of the 4 corners of the mirror were selected and the
-homography matrix was estimated. Then the process to reconstruct the
- ``destination'' image was done using the bilinear interpolation.
+The result images show a big difference in the color and ilumination, this can
+be used as future work to automatically balance the color and the illumination
+making the image more ``smooth''.
 
-\begin{figure}
-\includegraphics[scale=0.2]{../img/original}
-\caption{Original image with perspective}
-\label{original}
-\end{figure}
-
-% \begin{lstlisting}[language=Python]
-% # Corners in the original matrix
-% X = np.array([
-%   [383, 215], [909, 124],
-%   [906, 665], [389, 604],
-% ])
-% # Corners in the destionation matrix
-% Xp = np.array([
-%   [344, 198], [944, 198],
-%   [944, 689], [344, 689],
-% ])
-%
-% H = compute_homography(X, Xp)
-%
-% # Load the original matrix
-%
-% img = cv2.imread(os.path.join(DIR, './img/original.jpg'))
-% img_out = apply_homography(img, H, biliniear_interpolation)
-% \end{lstlisting}
-
-\begin{figure}
-\includegraphics[scale=0.15]{../img/transformed}
-\caption{Removed perspective using linear projective transformations}
-\label{transformed}
-\end{figure}
-
-In this task I used two different estimations of the pixels to compare their
-performance, they are shown in the figure \ref{pixel-estimation}.
-Both were generated from the same image, (a) was using a bilinear interpolation,
-and (b) was taken the nearest integer pixel to the real coordinates.
-
-\begin{figure}
-    \centering
-    \begin{subfigure}[b]{0.2\textwidth}
-        \includegraphics[scale=0.4]{../img/bilinear}
-        \caption{Bilinear}
-    \end{subfigure}
-    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-      %(or a blank line to force the subfigure onto a new line)
-    \begin{subfigure}[b]{0.2\textwidth}
-        \includegraphics[scale=0.4]{../img/rounded}
-        \caption{Nearest integer pixel}
-    \end{subfigure}
-    \caption{Pixel estimation}
-    \label{pixel-estimation}
-\end{figure}
-
-
-\subsection{Scanner}
-
-In this section, the same program was used to simulate a scanner, in this case
-the reference points were the corners of the paper sheet and the destination
-coordinates where the dimentions of the image.
-
-It would be very interesting to merge this application with the corner detection
-algorithms seen in class, to automate the process.
-
-\begin{figure}
-    \centering
-    \begin{subfigure}[b]{0.2\textwidth}
-        \includegraphics[scale=0.14]{../img/scan}
-        \caption{Original picture}
-    \end{subfigure}
-    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-      %(or a blank line to force the subfigure onto a new line)
-    \begin{subfigure}[b]{0.2\textwidth}
-        \includegraphics[scale=0.1]{../img/scan_transformed}
-        \caption{transformed image that simulated the scan of the image}
-    \end{subfigure}
-    \caption{Scanner application}
-\end{figure}
-
-
-\subsection{Add perspective}
-
-\begin{figure}
-\includegraphics[scale=0.25]{../img/cat}
-\caption{Image ``without perspective''}
-\label{cat}
-\end{figure}
-
-In this experiment, I took an image ``without perspective'' (fig \ref{cat}) and
-then apply it a projective transformation to embed the image into another image.
-The result of this is the fig \ref{cat-embed}.
-
-As the reconstruction algorithm iterates over the destination image, it is
-necessary to determine if a pixel is inside of the ``embedding area''. To
-achive this, I wrote another auxiliary function to determine if a point is
-inside a convex polygon, this function basically checks that the point is always
-to the same side of the edges of the polygon. The side of the point depends
-if the edges are traversed clockwise or anticlockwise. Besides this, no other
-code different of the already used was necessary.
-
-\begin{figure}
-\includegraphics[scale=0.2]{../img/cat_transformed}
-\caption{Embeded image into another scene}
-\label{cat-embed}
-\end{figure}
-
-\section{Conclusion}
-
-The theory about 2D projective transformations worked as expected. \\
-
-It is very important to use robust methods to solve the linear system of the
-homography, with this we can add more matching points and avoid erros or wrong
-transformations. \\
-
-The technique used to estimate can highly increase (or decrease) the quality
-of the results as we saw in the fig \ref{pixel-estimation}, other future
-improvements of this work could be to implement different estimation algorithms,
-they can be easily added to the reconstruction. \\
-
-As result, I constructed a basic library to work with plannar projective
-transformations that can be used from other programs.
 
 \bibliographystyle{unsrt}
 \bibliography{report}
