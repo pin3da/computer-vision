@@ -12,7 +12,7 @@ if __name__ == '__main__':
     images = [
         cv2.imread(os.path.join(DIR, target)) for target in targets
     ]
-    pairs, final = stitcher.stich(
+    pairs, final = stitcher.stitch(
         images=images,
         destination_matches=os.path.join(DIR, './img/')
     )

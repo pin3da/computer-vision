@@ -3,3 +3,5 @@
 *.bbl
 *.blg
 *.pyc
+
+.idea
