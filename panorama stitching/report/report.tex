@@ -368,7 +368,7 @@ a small library for image stitching.
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
 Computer vision, 2d projective transformations, homography,
-perspective, RANSAC, descriptors, matching.
+perspective, RANSAC, visual descriptors, matching.
 \end{IEEEkeywords}
 
 \section{Image stitching stages.}
@@ -387,7 +387,8 @@ generally detected when there are big changes of illumination
 or colors, as humans we can see them in the corners and edges of the objects.
 The most common techniques for edge detector are the sobel filter,
 and Canny edge detector, the Harry's corner detection and more. The basis for
-this methods are the derivatives of the image and the discontinuities.
+this methods are the derivatives of the image and the discontinuities of
+the image.
 
 \begin{figure}[H]
 \includegraphics[scale=0.16]{../img/edge_detection}
@@ -403,11 +404,11 @@ previous subsection. They pretend to collect ``information'' about the
 image that is used as an input for other stages. In this case, this
 information is used to generate a match of key points between a pair of
 images. In this work I used an Scale-invariant feature transform \cite{wiki:sift}
-(SIFT ) as visual descriptor.
+(SIFT) as visual descriptor, provided by OpenCV.
 
 \begin{figure}[H]
 \includegraphics[scale=0.2]{../img/descriptor_example}
-\caption{Plot of feature vectors found using SIFT.}
+\caption{Plot of visual descriptors found using SIFT.}
 \label{canny}
 \end{figure}
 
@@ -429,7 +430,7 @@ by OpenCV and suggested in \cite{opencv:tutorial}.
 After find the matches, we need to compute a projective transformation
 in order to put the two images in the same plane. It can be shown that we
 can estimate the projective transformation $h$ using 4 or more matching
-correspondences between the two images $x$ and $x'$ using the following
+correspondences between the two images $\mathbf{X}$ and $\mathbf{X'}$ using the following
 system of equations for each pair of correspondences:
 
 \[
@@ -460,7 +461,7 @@ the outliers and compute the best possible solution.
 
 After we found the projective transformation, we just need to map one image to
 the same plane of the other one. This is the last step for the panorama
-stitching we can see the result of this in the figures \ref{panorama-stitching}
+stitching. We can see the result of this in the figures \ref{panorama-stitching}
 and \ref{stitching-result}.
 
 \begin{figure}
