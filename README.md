@@ -1,6 +1,6 @@
 # computer-vision
 
-Programming assingments of the course "Computer Vision" class at Universidad Tecnologica de Pereira. 2017-II
+Programming assingments of the course "Computer Vision" at Universidad Tecnologica de Pereira. 2017-II
 
 Each project has its own detailed report.
 
